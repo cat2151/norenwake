@@ -1,1 +1,2 @@
-# norenwake
+dummy
+今後、自動生成されます
