@@ -50,6 +50,12 @@ cargo install --force --git https://github.com/cat2151/norenwake
 norenwake
 ```
 
+## Update
+
+```bash
+norenwake update
+```
+
 ## Key Bindings
 
 - `h` / `l` / `←` / `→`: Move focus pane (repos / dir tree / log)

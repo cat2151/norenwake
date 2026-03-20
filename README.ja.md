@@ -50,6 +50,12 @@ cargo install --force --git https://github.com/cat2151/norenwake
 norenwake
 ```
 
+## 更新
+
+```bash
+norenwake update
+```
+
 ## キー操作
 
 - `h` / `l` / `←` / `→`: フォーカスペイン移動（repos / dir tree / log）
