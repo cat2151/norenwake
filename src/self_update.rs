@@ -1,4 +1,4 @@
-use anyhow::{bail, Result};
+use anyhow::Result;
 use std::process::Command;
 
 const GIT_URL: &str = "https://github.com/cat2151/norenwake";
@@ -57,11 +57,9 @@ pub fn run_self_update() -> Result<bool> {
         let bat_path =
             bat_path.ok_or_else(|| anyhow::anyhow!("failed to allocate a unique temp bat path"))?;
 
-        let bat_str = bat_path
-            .to_str()
-            .ok_or_else(|| anyhow::anyhow!("temp bat path is not valid UTF-8"))?;
         Command::new("cmd")
-            .args(["/C", "start", "", bat_str])
+            .args(["/C", "start", ""])
+            .arg(&bat_path)
             .spawn()
             .map_err(|err| {
                 anyhow::anyhow!(
@@ -83,7 +81,7 @@ pub fn run_self_update() -> Result<bool> {
             .args(["install", "--force", "--git", GIT_URL])
             .status()?;
         if !status.success() {
-            bail!("cargo install failed with status: {status}");
+            anyhow::bail!("cargo install failed with status: {status}");
         }
         Ok(false)
     }

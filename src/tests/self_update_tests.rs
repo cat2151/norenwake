@@ -1,4 +1,4 @@
-use crate::self_update::{should_handle_update_subcommand, update_bat_content};
+use crate::{should_handle_update_subcommand, update_bat_content};
 
 #[test]
 fn update_subcommand_is_detected_only_for_exact_first_arg() {
