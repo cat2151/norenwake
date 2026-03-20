@@ -3,6 +3,7 @@ pub mod git_ops;
 pub mod github;
 pub mod logging;
 pub mod models;
+mod self_update;
 #[cfg(test)]
 pub mod tests;
 pub mod ui;
@@ -13,6 +14,7 @@ use app::App;
 use github::{fetch_authenticated_login, fetch_repos, get_github_token};
 use logging::{append_log_line, ensure_log_file, tail_log_lines};
 use models::MAX_LOG_LINES;
+pub use self_update::{run_self_update, should_handle_update_subcommand};
 use std::fs;
 use util::{app_data_dir, now_string};
 
