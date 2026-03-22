@@ -1,29 +1,29 @@
 # norenwake
 
-A TUI for Windows to create new repositories by branching off your public GitHub repositories. Written in Rust.
+A TUI for Windows that creates a new repository by 'norenwake' (branching off) your own public GitHub repositories. Written in Rust.
 
 ## Previous Challenges and This App's Solutions
 
-| Previous Challenges                                                   | This App's Solution                                                                                                                                                                                                                                     |
-| :-------------------------------------------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| High cognitive load for a series of tasks, leading to fatigue.        | Visualized with a TUI to reduce cognitive load.                                                                                                                                                                                                         |
-| Time-consuming to find the target repository.                         | Quickly find the target repo using `/` for filtering (space-separated AND search).                                                                                                                                                                      |
-| Risk of accidental pushes because the remote still points to the original repo after cloning. | Reconfigure remotes immediately after cloning, deleting `upstream`. Unify `origin`'s fetch to HTTPS and push to SSH.                                                                                                                   |
-| Configuration and README can easily become inconsistent when changing to a new repo name. | Changing the repo name with `n` updates the working directory name, remote settings, and the `README.ja.md` top header all at once.                                                                                                |
-| Time-consuming to confirm changes.                                    | View README preview and diff (delta) on screen, and logs are also retained.                                                                                                                                                                             |
-| Difficult to detect misconfigurations before pushing.                 | Open the verification screen with `Shift + P` to check `origin` / push URL / `upstream`. If in a dangerous state, a hard guard rejects the push.                                                                                                          |
+| Previous Challenges | This App's Solution |
+| --- | --- |
+| High cognitive load for a series of tasks, leading to fatigue | Visualized with TUI, reducing cognitive load. |
+| Time-consuming to find the target repository | Quickly find the target repository with `/` filtering (space-separated AND search). |
+| Concern about accidental pushes because the remote still points to the original repository after cloning | Immediately after cloning, reconfigure the remote and delete `upstream`. `origin`'s fetch URL is unified to HTTPS, and push URL to SSH. |
+| Settings and README tend to become inconsistent when changing to a new repository name | When changing the repository name with `n`, the working directory name, remote settings, and `README.ja.md`'s leading header are updated together. |
+| Time-consuming to confirm changes | README preview and diff (delta) can be confirmed on screen, and logs are also retained. |
+| Difficult to notice configuration errors before pushing | Open the validation screen with `Shift + P` to check `origin` / push URL / `upstream`. If in a dangerous state, push is rejected with a hard guard. |
 
-The shortest operational procedure is: `Enter` to clone → `n` to name → `c` to commit → `Shift + P` to verify → `y` to push.
-Proceeding step-by-step with the TUI reduces the risk of errors or omissions and cognitive load.
+The shortest procedure for practical operation is: `Enter` to clone → `n` to name → `c` to commit → `Shift + P` to validate → `y` to push.
+By proceeding step-by-step within the TUI, the risk of errors or omissions and cognitive load can be reduced.
 
 ## Safety Features
 
 - Only "your own owner repositories" that are "public / non-fork / non-archived" are displayed as clone sources.
-- Remotes are reconfigured to a safe state immediately after cloning.
+- Immediately after cloning, the remote is reconfigured to the safe side.
 - `upstream` is deleted, and `origin`'s fetch URL is set to HTTPS, push URL to SSH.
-- A hard guard is performed before pushing.
-- Pushes are rejected if `origin` points to the original norenwake source.
-- Pushes are rejected if `upstream` still exists.
+- A hard guard is implemented before pushing.
+- If `origin` points to the 'norenwake' source, push is rejected.
+- If `upstream` remains, push is rejected.
 
 ## Requirements
 
@@ -32,11 +32,11 @@ Proceeding step-by-step with the TUI reduces the risk of errors or omissions and
 - `gh` (GitHub CLI)
 - `delta` (diff tool)
 
-`gh` is used for API authentication. Tokens are retrieved in the following priority:
+`gh` is used for API authentication. Tokens are retrieved in the following priority order:
 
-1.  `GH_TOKEN`
-2.  `GITHUB_TOKEN`
-3.  `gh auth token`
+1. `GH_TOKEN`
+2. `GITHUB_TOKEN`
+3. `gh auth token`
 
 ## Installation
 
@@ -44,7 +44,7 @@ Proceeding step-by-step with the TUI reduces the risk of errors or omissions and
 cargo install --force --git https://github.com/cat2151/norenwake
 ```
 
-## Launch
+## Usage
 
 ```bash
 norenwake
@@ -56,15 +56,15 @@ norenwake
 norenwake update
 ```
 
-## Key Bindings
+## Keybindings
 
 - `h` / `l` / `←` / `→`: Move focus pane (repos / dir tree / log)
-- `j` / `k` / `↑` / `↓`: Move within current pane
-- `PageUp` / `PageDown`: Page movement within current pane
-- `Enter` (on repos pane): Clone selected repo
+- `j` / `k` / `↑` / `↓`: Move within the current pane
+- `PageUp` / `PageDown`: Page move within the current pane
+- `Enter` (on repos pane): Clone selected repository
 - `n`: Edit new repo name
 - `c`: Commit
-- `Shift + P`: Pre-push verification and push confirmation
+- `Shift + P`: Pre-push validation and push confirmation
 - `Shift + L`: Copy full log to clipboard
 - `/`: Open repos filter overlay (space-separated AND search)
 - `?`: Help overlay
@@ -72,37 +72,37 @@ norenwake update
 
 ## Workflow
 
-1.  Select target in `repos` and `Enter` to clone
-2.  Edit and confirm `new repo name` with `n`
-3.  Commit with `c`
-4.  Confirm verification results with `Shift + P`
-5.  Press `y` to push
+1. Select target in `repos` and `Enter` to clone
+2. Edit and confirm `new repo name` with `n`
+3. Commit with `c`
+4. Confirm validation results with `Shift + P`
+5. Press `y` to push
 
 ## README Update Rules
 
-`update_readme_ja` maintains only one of the following norenwake headers at the beginning of `README.ja.md`.
+`update_readme_ja` maintains only one of the following 'norenwake' headers at the beginning of `README.ja.md`.
 
 ```md
 # <new repo name>
 
-Cloned from the original repo and branched off. Contains history up to the branching point.
+Cloned from the original repo as a 'norenwake'. It holds the history up to the 'norenwake' point.
 ```
 
-If existing headers of the same type are consecutive, they are collapsed to avoid duplication.
+If existing headers of the same type are consecutive, they are folded, and no duplicates are left.
 
-## README preview
+## README Preview
 
-- Retrieval prioritizes `README.ja.md`, falling back to `README.md` on failure.
+- `README.ja.md` is prioritized for retrieval; if it fails, it falls back to `README.md`.
 
 ## Data Storage Location (Windows)
 
 - `%LOCALAPPDATA%\norenwake\`
 
 ## Assumption
-- This application is for personal use and is not intended for others. If you want similar functionality, we recommend creating your own.
+- This app is for personal use and is not intended for others. If you want similar functionality, we recommend cloning or creating your own.
 
 ## What This App Aims For
-- PoC. To demonstrate (and has demonstrated) that useful personal applications can be created with Codex.
+- PoC. To demonstrate that a helpful personal app can be created with Codex (demonstrated).
 
-## What This App Does NOT Aim For (Out of Scope)
+## What This App Does Not Aim For (Out of Scope)
 - Support. Responding to requests or suggestions.
