@@ -70,8 +70,8 @@ impl App {
                 let _ = self.refresh_selected_repo_readme_preview();
             }
             Ok(Err(err)) => {
-                self.set_startup_error(err.clone());
                 self.log(format!("error: 起動処理に失敗しました: {}", err));
+                self.set_startup_error(err);
             }
             Err(mpsc::TryRecvError::Empty) => {
                 self.startup_rx = Some(rx);

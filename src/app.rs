@@ -205,7 +205,7 @@ impl App {
         self.startup_error = None;
         self.repo_state = RepoListState::new(!self.repos.is_empty());
         self.filter_state = RepoListState::new(!self.filtered_repo_indices().is_empty());
-        self.tree_state = TreeListState::new(!self.current_tree_lines().is_empty());
+        self.ensure_tree_state_initialized();
     }
 
     pub(crate) fn set_startup_error(&mut self, message: impl Into<String>) {
@@ -213,6 +213,14 @@ impl App {
         self.startup_error = Some(message);
         self.readme_preview_title = "startup error".to_string();
         self.readme_preview_markdown = "起動処理に失敗しました。log を確認してください".to_string();
+    }
+
+    fn ensure_tree_state_initialized(&mut self) {
+        let tree_len = self.current_tree_lines().len();
+        self.tree_state.sync_len(tree_len);
+        if self.tree_state.list.selected().is_none() && tree_len > 0 {
+            self.tree_state = TreeListState::new(true);
+        }
     }
 
     pub fn run_tui(&mut self) -> Result<()> {

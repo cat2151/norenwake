@@ -24,7 +24,7 @@ impl TempLogPath {
         }
     }
 
-    fn clone_path(&self) -> std::path::PathBuf {
+    fn path(&self) -> std::path::PathBuf {
         self.path.clone()
     }
 }
@@ -73,7 +73,7 @@ fn app_can_initialize_before_startup_data_arrives() {
     let log_path = TempLogPath::new();
     let (_tx, rx) = mpsc::channel();
 
-    let app = App::new_with_startup_receiver(log_path.clone_path(), Vec::new(), Some(rx));
+    let app = App::new_with_startup_receiver(log_path.path(), Vec::new(), Some(rx));
 
     assert!(app.is_startup_loading());
     assert!(app.repos.is_empty());
@@ -85,7 +85,7 @@ fn app_can_initialize_before_startup_data_arrives() {
 #[test]
 fn startup_data_is_applied_after_background_loading() {
     let log_path = TempLogPath::new();
-    let mut app = App::new_with_startup_receiver(log_path.clone_path(), Vec::new(), None);
+    let mut app = App::new_with_startup_receiver(log_path.path(), Vec::new(), None);
 
     app.apply_startup_data(StartupData {
         github_token: "token".to_string(),
@@ -110,7 +110,7 @@ fn startup_data_is_applied_after_background_loading() {
 fn startup_error_is_retained_when_background_channel_disconnects() {
     let log_path = TempLogPath::new();
     let (tx, rx) = mpsc::channel();
-    let mut app = App::new_with_startup_receiver(log_path.clone_path(), Vec::new(), Some(rx));
+    let mut app = App::new_with_startup_receiver(log_path.path(), Vec::new(), Some(rx));
 
     drop(tx);
     app.drain_startup_updates();
