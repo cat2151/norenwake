@@ -15,6 +15,9 @@ use super::theme::{
     MONOKAI_TEXT, MONOKAI_WHITE,
 };
 
+const FOOTER_TEXT: &str =
+    "q: quit   ?: help   /: filter repos   h/l/←/→: pane move   Enter: clone   n: rename   c: commit   Shift+P: push";
+
 pub(super) fn draw_app_title(frame: &mut Frame, app: &App, area: ratatui::layout::Rect) {
     let title = Paragraph::new("norenwake ～リポジトリ暖簾分け～").style(focus_dim(
         Style::default()
@@ -275,13 +278,24 @@ pub(super) fn draw_log(frame: &mut Frame, app: &App, area: ratatui::layout::Rect
 }
 
 pub(super) fn draw_footer(frame: &mut Frame, app: &App, area: ratatui::layout::Rect) {
-    let footer = Paragraph::new(
-        "q: quit   /: filter repos   h/l/←/→: pane move   Enter: clone   n: rename   c: commit   Shift+P: push",
-    )
-    .block(pane_block("keys", false, app.is_focused))
-    .style(focus_dim(
-        Style::default().bg(MONOKAI_PANEL).fg(MONOKAI_MUTED),
-        app.is_focused,
-    ));
+    let footer = Paragraph::new(FOOTER_TEXT)
+        .block(pane_block("keys", false, app.is_focused))
+        .style(focus_dim(
+            Style::default().bg(MONOKAI_PANEL).fg(MONOKAI_MUTED),
+            app.is_focused,
+        ));
     frame.render_widget(footer, area);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::FOOTER_TEXT;
+
+    #[test]
+    fn footer_lists_help_next_to_quit() {
+        assert!(
+            FOOTER_TEXT.contains("q: quit   ?: help"),
+            "footer must list help next to quit",
+        );
+    }
 }
