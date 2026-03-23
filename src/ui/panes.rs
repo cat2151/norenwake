@@ -66,31 +66,52 @@ pub(super) fn draw_todo(frame: &mut Frame, app: &App, area: ratatui::layout::Rec
 pub(super) fn draw_repo_list(frame: &mut Frame, app: &App, area: ratatui::layout::Rect) {
     let active = app.active_pane == ActivePane::Repos;
     let filtered = app.filtered_repo_indices();
-    let items: Vec<ListItem> = filtered
-        .iter()
-        .enumerate()
-        .filter_map(|(visible_index, repo_index)| {
-            app.repos
-                .get(*repo_index)
-                .map(|repo| (visible_index, *repo_index, repo))
-        })
-        .map(|(_visible_index, repo_index, repo)| {
-            let is_selected = repo_index == app.repo_state.selected;
-            let style = if active && is_selected {
-                Style::default()
-                    .fg(MONOKAI_ACTIVE)
-                    .add_modifier(Modifier::BOLD)
-            } else if active {
-                Style::default().fg(MONOKAI_WHITE)
-            } else {
-                Style::default().fg(MONOKAI_DIM).add_modifier(Modifier::DIM)
-            };
-            ListItem::new(Line::from(Span::styled(
-                &repo.name,
-                focus_dim(style, app.is_focused),
-            )))
-        })
-        .collect();
+    let items: Vec<ListItem> = if filtered.is_empty() {
+        let placeholder = if let Some(error) = app.startup_error.as_deref() {
+            error
+        } else if app.is_startup_loading() {
+            "GitHub repos を読み込んでいます..."
+        } else if app.repos.is_empty() {
+            "clone できる repo がありません"
+        } else {
+            "filter に一致する repo がありません"
+        };
+        let style = if active {
+            Style::default().fg(MONOKAI_MUTED)
+        } else {
+            Style::default().fg(MONOKAI_DIM).add_modifier(Modifier::DIM)
+        };
+        vec![ListItem::new(Line::from(Span::styled(
+            placeholder,
+            focus_dim(style, app.is_focused),
+        )))]
+    } else {
+        filtered
+            .iter()
+            .enumerate()
+            .filter_map(|(visible_index, repo_index)| {
+                app.repos
+                    .get(*repo_index)
+                    .map(|repo| (visible_index, *repo_index, repo))
+            })
+            .map(|(_visible_index, repo_index, repo)| {
+                let is_selected = repo_index == app.repo_state.selected;
+                let style = if active && is_selected {
+                    Style::default()
+                        .fg(MONOKAI_ACTIVE)
+                        .add_modifier(Modifier::BOLD)
+                } else if active {
+                    Style::default().fg(MONOKAI_WHITE)
+                } else {
+                    Style::default().fg(MONOKAI_DIM).add_modifier(Modifier::DIM)
+                };
+                ListItem::new(Line::from(Span::styled(
+                    &repo.name,
+                    focus_dim(style, app.is_focused),
+                )))
+            })
+            .collect()
+    };
 
     let mut state = app.repo_state.list;
     frame.render_stateful_widget(

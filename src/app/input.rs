@@ -61,6 +61,14 @@ impl App {
                 ActivePane::Log => self.scroll_log_up(1),
             },
             KeyCode::Enter if is_press && self.active_pane == ActivePane::Repos => {
+                if self.is_startup_loading() {
+                    self.log("起動処理を読み込み中です。完了後に clone してください");
+                    return Ok(());
+                }
+                if self.selected_repo().is_none() {
+                    self.log("clone できる repo がありません");
+                    return Ok(());
+                }
                 self.active_pane = ActivePane::Repos;
                 self.busy_message = Some("Cloning repository...".to_string());
                 self.busy_started_at = Some(Instant::now());

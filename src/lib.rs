@@ -11,7 +11,6 @@ pub mod util;
 
 use anyhow::Result;
 use app::App;
-use github::{fetch_authenticated_login, fetch_repos, get_github_token};
 use logging::{append_log_line, ensure_log_file, tail_log_lines};
 use models::MAX_LOG_LINES;
 #[cfg(test)]
@@ -34,31 +33,12 @@ pub fn run() -> Result<()> {
         &log_path,
         &format!("[{}] アプリを開始しました", now_string()),
     )?;
+    append_log_line(
+        &log_path,
+        &format!("[{}] 起動処理を background で開始しました", now_string()),
+    )?;
     let log_lines = tail_log_lines(&log_path, MAX_LOG_LINES)?;
 
-    let token = get_github_token()?;
-    let github_login = fetch_authenticated_login(&token)?;
-    append_log_line(
-        &log_path,
-        &format!(
-            "[{}] `gh auth token` で GitHub token を取得しました",
-            now_string()
-        ),
-    )?;
-    append_log_line(
-        &log_path,
-        &format!("[{}] 認証済みログイン名: {}", now_string(), github_login),
-    )?;
-    let repos = fetch_repos(&token)?;
-    append_log_line(
-        &log_path,
-        &format!(
-            "[{}] リポジトリを {} 件取得しました",
-            now_string(),
-            repos.len()
-        ),
-    )?;
-
-    let mut app = App::new(repos, log_path, log_lines, token, github_login);
+    let mut app = App::new(log_path, log_lines);
     app.run_tui()
 }
