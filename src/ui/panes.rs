@@ -67,16 +67,23 @@ pub(super) fn draw_repo_list(frame: &mut Frame, app: &App, area: ratatui::layout
     let active = app.active_pane == ActivePane::Repos;
     let filtered = app.filtered_repo_indices();
     let items: Vec<ListItem> = if filtered.is_empty() {
-        let placeholder = if app.is_startup_loading() {
+        let placeholder = if let Some(error) = app.startup_error.as_deref() {
+            error
+        } else if app.is_startup_loading() {
             "GitHub repos を読み込んでいます..."
         } else if app.repos.is_empty() {
             "clone できる repo がありません"
         } else {
             "filter に一致する repo がありません"
         };
+        let style = if active {
+            Style::default().fg(MONOKAI_MUTED)
+        } else {
+            Style::default().fg(MONOKAI_DIM).add_modifier(Modifier::DIM)
+        };
         vec![ListItem::new(Line::from(Span::styled(
             placeholder,
-            focus_dim(Style::default().fg(MONOKAI_MUTED), app.is_focused),
+            focus_dim(style, app.is_focused),
         )))]
     } else {
         filtered

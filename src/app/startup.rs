@@ -55,7 +55,7 @@ impl App {
         Some(rx)
     }
 
-    pub(super) fn drain_startup_updates(&mut self) {
+    pub(crate) fn drain_startup_updates(&mut self) {
         let Some(rx) = self.startup_rx.take() else {
             return;
         };
@@ -70,12 +70,16 @@ impl App {
                 let _ = self.refresh_selected_repo_readme_preview();
             }
             Ok(Err(err)) => {
+                self.set_startup_error(err.clone());
                 self.log(format!("error: 起動処理に失敗しました: {}", err));
             }
             Err(mpsc::TryRecvError::Empty) => {
                 self.startup_rx = Some(rx);
             }
-            Err(mpsc::TryRecvError::Disconnected) => {}
+            Err(mpsc::TryRecvError::Disconnected) => {
+                self.set_startup_error("起動処理チャネルが切断されました");
+                self.log("error: 起動処理チャネルが切断されました");
+            }
         }
     }
 

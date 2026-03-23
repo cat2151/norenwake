@@ -112,6 +112,7 @@ pub struct App {
     pub filter_state: RepoListState,
     pub readme_preview_title: String,
     pub readme_preview_markdown: String,
+    pub(crate) startup_error: Option<String>,
     cache_index: CacheIndex,
     prefetch_rx: Option<Receiver<PrefetchUpdate>>,
     startup_rx: Option<Receiver<std::result::Result<StartupData, String>>>,
@@ -176,6 +177,7 @@ impl App {
             filter_state: RepoListState::new(false),
             readme_preview_title: "README.ja.md".to_string(),
             readme_preview_markdown: "起動処理を読み込んでいます...".to_string(),
+            startup_error: None,
             cache_index,
             prefetch_rx: None,
             startup_rx,
@@ -200,9 +202,17 @@ impl App {
         self.github_login = data.github_login;
         self.repos = data.repos;
         self.startup_tree_lines = data.startup_tree_lines;
+        self.startup_error = None;
         self.repo_state = RepoListState::new(!self.repos.is_empty());
         self.filter_state = RepoListState::new(!self.filtered_repo_indices().is_empty());
-        self.tree_state.sync_len(self.current_tree_lines().len());
+        self.tree_state = TreeListState::new(!self.current_tree_lines().is_empty());
+    }
+
+    pub(crate) fn set_startup_error(&mut self, message: impl Into<String>) {
+        let message = message.into();
+        self.startup_error = Some(message);
+        self.readme_preview_title = "startup error".to_string();
+        self.readme_preview_markdown = "起動処理に失敗しました。log を確認してください".to_string();
     }
 
     pub fn run_tui(&mut self) -> Result<()> {
