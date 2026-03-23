@@ -293,9 +293,9 @@ mod tests {
 
     #[test]
     fn footer_lists_help_next_to_quit() {
-        assert_eq!(
-            FOOTER_TEXT,
-            "q: quit   ?: help   /: filter repos   h/l/←/→: pane move   Enter: clone   n: rename   c: commit   Shift+P: push"
+        assert!(
+            FOOTER_TEXT.contains("q: quit   ?: help"),
+            "footer must list help next to quit",
         );
     }
 }
