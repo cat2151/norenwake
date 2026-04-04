@@ -96,7 +96,7 @@ norenwake update
 
 ## データ保存先（Windows）
 
-- `%LOCALAPPDATA%\norenwake\
+- `%LOCALAPPDATA%\norenwake\`
 
 ## 前提
 - 自分用のアプリですので、他の人が使うことを想定していません。似たような機能がほしいときはcloneや自作をおすすめします。
