@@ -33,6 +33,8 @@ GitHub の自分の公開リポジトリを暖簾分けした新しいリポジ�
 - `gh`（GitHub CLI）
 - `delta`（diffツール）
 
+Python は `norenwake update` のセルフアップデート処理で `cat-self-update-lib` に委譲するためにだけ必要です。
+
 `gh` は API 認証に使います。token は次の優先順で取得します。
 
 1. `GH_TOKEN`

@@ -33,6 +33,8 @@ By proceeding step-by-step with the TUI, the risk of errors or omissions and cog
 -   `gh` (GitHub CLI)
 -   `delta` (diff tool)
 
+Python is required only for the `norenwake update` self-update flow, which delegates to `cat-self-update-lib`.
+
 `gh` is used for API authentication. The token is obtained in the following priority order:
 
 1.  `GH_TOKEN`
