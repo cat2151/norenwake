@@ -28,6 +28,7 @@ GitHub の自分の公開リポジトリを暖簾分けした新しいリポジ�
 ## 必要なもの
 
 - Rust（`cargo`）
+- Python
 - `git`
 - `gh`（GitHub CLI）
 - `delta`（diffツール）
@@ -54,6 +55,12 @@ norenwake
 
 ```bash
 norenwake update
+```
+
+## 更新確認
+
+```bash
+norenwake check
 ```
 
 ## キー操作

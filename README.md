@@ -28,6 +28,7 @@ By proceeding step-by-step with the TUI, the risk of errors or omissions and cog
 ## Requirements
 
 -   Rust (`cargo`)
+-   Python
 -   `git`
 -   `gh` (GitHub CLI)
 -   `delta` (diff tool)
@@ -54,6 +55,12 @@ norenwake
 
 ```bash
 norenwake update
+```
+
+## Check for Updates
+
+```bash
+norenwake check
 ```
 
 ## Keybindings
