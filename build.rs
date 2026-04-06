@@ -1,8 +1,15 @@
+use std::fs;
 use std::process::Command;
 
 fn main() {
     println!("cargo:rerun-if-changed=.git/HEAD");
-    println!("cargo:rerun-if-changed=.git/refs");
+    println!("cargo:rerun-if-changed=.git/packed-refs");
+
+    if let Ok(head) = fs::read_to_string(".git/HEAD") {
+        if let Some(head_ref) = head.trim().strip_prefix("ref: ") {
+            println!("cargo:rerun-if-changed=.git/{head_ref}");
+        }
+    }
 
     let git_commit_hash = Command::new("git")
         .args(["rev-parse", "HEAD"])
