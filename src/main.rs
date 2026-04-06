@@ -1,12 +1,12 @@
-fn main() -> anyhow::Result<()> {
-    let args: Vec<String> = std::env::args().collect();
-    if norenwake::should_handle_update_subcommand(&args) {
-        let should_exit = norenwake::run_self_update()?;
-        if should_exit {
-            std::process::exit(0);
-        }
-        return Ok(());
-    }
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let action = match norenwake::parse_command(std::env::args_os()) {
+        Ok(action) => action,
+        Err(error) => error.exit(),
+    };
 
-    norenwake::run()
+    match action {
+        norenwake::CommandAction::RunTui => norenwake::run().map_err(Into::into),
+        norenwake::CommandAction::Update => norenwake::run_self_update(),
+        norenwake::CommandAction::Check => norenwake::run_check(),
+    }
 }

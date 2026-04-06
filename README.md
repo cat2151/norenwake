@@ -28,9 +28,12 @@ By proceeding step-by-step with the TUI, the risk of errors or omissions and cog
 ## Requirements
 
 -   Rust (`cargo`)
+-   Python
 -   `git`
 -   `gh` (GitHub CLI)
 -   `delta` (diff tool)
+
+Python is required only for the `norenwake update` self-update flow, which delegates to `cat-self-update-lib`.
 
 `gh` is used for API authentication. The token is obtained in the following priority order:
 
@@ -54,6 +57,12 @@ norenwake
 
 ```bash
 norenwake update
+```
+
+## Check for Updates
+
+```bash
+norenwake check
 ```
 
 ## Keybindings

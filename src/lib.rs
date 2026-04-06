@@ -1,4 +1,5 @@
 pub mod app;
+mod cli;
 pub mod git_ops;
 pub mod github;
 pub mod logging;
@@ -11,11 +12,10 @@ pub mod util;
 
 use anyhow::Result;
 use app::App;
+pub use cli::{parse_command, CommandAction};
 use logging::{append_log_line, ensure_log_file, tail_log_lines};
 use models::MAX_LOG_LINES;
-#[cfg(test)]
-pub(crate) use self_update::update_bat_content;
-pub use self_update::{run_self_update, should_handle_update_subcommand};
+pub use self_update::{run_check, run_self_update};
 use std::fs;
 use util::{app_data_dir, now_string};
 

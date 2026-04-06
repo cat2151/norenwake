@@ -7,6 +7,8 @@ edition = "2021"
 anyhow = "1"
 ansi-to-tui = "8.0.1"
 arboard = "3"
+cat-self-update-lib = { git = "https://github.com/cat2151/cat-self-update", rev = "e324426de0a3c219d1a63a939df93ff8f007916a", package = "cat-self-update-lib" }
+clap = { version = "4.6", features = ["derive"] }
 crossterm = "0.29"
 dirs = "6"
 ratatui = "0.30"
